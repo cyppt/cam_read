@@ -1,0 +1,7 @@
+#ifndef __FIND_YAML_PATH_H__
+#define __FIND_YAML_PATH_H__
+
+#define YAML_PATH "@YAML_PATH@"
+#define BAG_FORMAT_YAML "@BAG_FORMAT_YAML@"
+
+#endif // __FIND_YAML_PATH_H__

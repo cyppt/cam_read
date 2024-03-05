@@ -1,0 +1,75 @@
+# Author: cyppt
+# Date: 2024-01-19
+
+# some file path, ros topic name and common parameters
+# bag file path
+#bag_path: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib-2023-04-20-16-03-15.bag"
+bag_path: "/media/cyppt/新加卷/dataset/six_cam/route14_2021-12-29-15-54-06.bag"
+#save root path
+#save_root: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib"
+save_root: "/media/cyppt/新加卷/dataset/six_cam/route14"
+
+#INS topic name
+ins_topic: "/ULV_ins_std_info"
+
+#camera topic name
+camera_topics:
+  - "/camera1/compressed"
+  - "/camera2/compressed"
+  - "/camera3/compressed"
+  - "/camera4/compressed"
+  - "/camera5/compressed"
+  - "/camera6/compressed"
+#camera_topics:
+#  - "/camera0/compressed"
+#  - "/camera1/compressed"
+#  - "/camera2/compressed"
+#  - "/camera3/compressed"
+#  - "/camera4/compressed"
+#  - "/camera5/compressed"
+#cam save path
+cam_save_path:
+  - "/camera1_front/"
+  - "/camera2_front_right/"
+  - "/camera3_back_right/"
+  - "/camera4_back/"
+  - "/camera5_back_left/"
+  - "/camera6_front_left/"
+#cam_save_path:
+#  - "/camera0/"
+#  - "/camera1/"
+#  - "/camera2/"
+#  - "/camera3/"
+#  - "/camera4/"
+#  - "/camera5/"
+#cam name:
+cam_name:
+    - "camera1_front"
+    - "camera2_front_right"
+    - "camera3_back_right"
+    - "camera4_back"
+    - "camera5_back_left"
+    - "camera6_front_left"
+#cam_name:
+#  - "camera0"
+#  - "camera1"
+#  - "camera2"
+#  - "camera3"
+#  - "camera4"
+#  - "camera5"
+
+# save time interval
+save_interval: 1
+#whether to save all
+save_all: True
+# format or read bag flag
+bag_format: False
+
+
+#if not save all, save which cam
+save_one_index: 1442
+
+#debug mode
+# 0: no debug
+# 1: check load data
+debug_mode : 1

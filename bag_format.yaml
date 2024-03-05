@@ -1,0 +1,23 @@
+# Author: cyppt
+# Date: 2024-01-23
+
+# some file path, ros topic name and common parameters
+#save root path
+save_root: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib"
+
+#camera topic name
+camera_topics:
+  - "/camera0/compressed"
+  - "/camera1/compressed"
+  - "/camera2/compressed"
+  - "/camera3/compressed"
+  - "/camera4/compressed"
+  - "/camera5/compressed"
+#cam save path
+
+img_path_json: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib/img_name.json"
+
+#debug mode
+# 0: no debug
+# 1: check load data
+debug_mode : 1
