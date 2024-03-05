@@ -59,10 +59,10 @@ cam_name:
 #  - "camera5"
 
 # save time interval
-save_interval: 1
+save_interval: 10
 #whether to save all
 save_all: True
-# format or read bag flag
+# format or read bag flag (use old version)
 bag_format: False
 
 
@@ -72,4 +72,4 @@ save_one_index: 1442
 #debug mode
 # 0: no debug
 # 1: check load data
-debug_mode : 1
+debug_mode : 0
