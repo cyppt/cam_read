@@ -29,6 +29,7 @@ private:
     std::string img_path_json;
     std::string save_root;
     std::vector<std::string> camera_topics;
+    int debug_mode;
 
     std::vector<std::vector<std::string>> img_path_vec;
 

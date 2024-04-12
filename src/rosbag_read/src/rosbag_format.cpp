@@ -12,8 +12,9 @@ rosbag_format::rosbag_format() {
     save_root = config["save_root"].as<std::string>();
     camera_topics = config["camera_topics"].as<std::vector<std::string>>();
     img_path_json = config["img_path_json"].as<std::string>();
+    debug_mode = config["debug_mode"].as<int>();
 
-    if (DEBUG_LOAD_DATA) {
+    if (debug_mode == DEBUG_LOAD_DATA) {
         std::cout << YELLOW << "-----------------debug mode-------------------" << std::endl;
         std::cout << CYAN << "check the config file" << std::endl;
         std::cout << CYAN << "save_root: " << save_root << std::endl;

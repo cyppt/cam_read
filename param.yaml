@@ -4,29 +4,33 @@
 # some file path, ros topic name and common parameters
 # bag file path
 #bag_path: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib-2023-04-20-16-03-15.bag"
-bag_path: "/media/cyppt/新加卷/dataset/six_cam/route14_2021-12-29-15-54-06.bag"
+#bag_path: "/media/cyppt/新加卷/dataset/six_cam/route14_2021-12-29-15-54-06.bag"
+#bag_path: "/media/cyppt/T7_Shield/6cam/route17_2021-12-29-16-49-33.bag"
+bag_path : "/media/cyppt/T7_Shield/6cam/lidar_6cam_white_car_6_building_2024-04-11-22-36-23.bag"
 #save root path
 #save_root: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib"
-save_root: "/media/cyppt/新加卷/dataset/six_cam/route14"
+#save_root: "/media/cyppt/新加卷/dataset/six_cam/route14"
+#save_root: "/media/cyppt/T7_Shield/6cam/route17"
+save_root: "/media/cyppt/T7_Shield/6cam/lidar_6cam_white_car_6_building_dark"
 
 #INS topic name
 ins_topic: "/ULV_ins_std_info"
 
 #camera topic name
-camera_topics:
-  - "/camera1/compressed"
-  - "/camera2/compressed"
-  - "/camera3/compressed"
-  - "/camera4/compressed"
-  - "/camera5/compressed"
-  - "/camera6/compressed"
 #camera_topics:
-#  - "/camera0/compressed"
 #  - "/camera1/compressed"
 #  - "/camera2/compressed"
 #  - "/camera3/compressed"
 #  - "/camera4/compressed"
 #  - "/camera5/compressed"
+#  - "/camera6/compressed"
+camera_topics:
+  - "/camera0/compressed"
+  - "/camera1/compressed"
+  - "/camera2/compressed"
+  - "/camera3/compressed"
+  - "/camera4/compressed"
+  - "/camera5/compressed"
 #cam save path
 cam_save_path:
   - "/camera1_front/"
@@ -59,15 +63,21 @@ cam_name:
 #  - "camera5"
 
 # save time interval
-save_interval: 10
+save_interval: 1
 #whether to save all
 save_all: True
 # format or read bag flag (use old version)
 bag_format: False
 
-
 #if not save all, save which cam
 save_one_index: 1442
+
+#read ins msg
+read_ins_flag: False
+
+#save json flag
+save_json_flag: True
+
 
 #debug mode
 # 0: no debug

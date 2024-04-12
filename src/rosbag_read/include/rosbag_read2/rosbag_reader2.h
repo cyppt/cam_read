@@ -46,6 +46,8 @@ private:
     std::string cam_name[6];
     bool save_all;
     bool bag_format;
+    bool read_ins_flag;
+    bool save_json_flag;
     int save_one_index;
     int debug_mode;
     int save_interval;

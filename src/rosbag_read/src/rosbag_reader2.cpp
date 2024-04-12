@@ -24,6 +24,8 @@ rosbag_reader2::rosbag_reader2() {
     save_interval = config["save_interval"].as<int>();
     save_one_index = config["save_one_index"].as<int>();
     debug_mode = config["debug_mode"].as<int>();
+    read_ins_flag = config["read_ins_flag"].as<bool>();
+    save_json_flag = config["save_json_flag"].as<bool>();
     for (auto &&cam:cam_save_path){
         if (save_all) cam = save_root + cam;
         else cam = save_root + "/";
@@ -33,6 +35,9 @@ rosbag_reader2::rosbag_reader2() {
         cam_name[i] = cam_name_temp[i];
     }
 
+    std::cout << CYAN << "bag_path: " << bag_path << std::endl;
+    std::cout << CYAN << "save_root: " << save_root << std::endl;
+    std::cout << RESET << std::endl;
     if(debug_mode == DEBUG_LOAD_DATA)
     {
         std::cout << YELLOW << "-----------------debug mode-------------------" << std::endl;
@@ -93,17 +98,18 @@ void rosbag_reader2::read_rosbag() {
     }
 
     // Check a view for ins topic
-    rosbag::View* ins_view = new rosbag::View(bag, rosbag::TopicQuery(ins_topic));
-
-    if (debug_mode == DEBUG_LOAD_DATA) {
-        // view ins data
-        std::cout << YELLOW << "-----------------debug mode-------------------" << std::endl;
-        rosbag_read::INSStdMsg::ConstPtr ins_msg = ins_view->begin()->instantiate<rosbag_read::INSStdMsg>();
-        std::cout << "ins -> imu" << ins_msg->imu << std::endl;
-        std::cout << "ins -> nav" << ins_msg->nav_sat_fix << std::endl;
-        std::cout << "ins -> header" << ins_msg->header << std::endl;
+    rosbag::View* ins_view = nullptr;
+    if (read_ins_flag) {
+        ins_view = new rosbag::View(bag, rosbag::TopicQuery(ins_topic));
+        if (debug_mode == DEBUG_LOAD_DATA) {
+            // view ins data
+            std::cout << YELLOW << "-----------------debug mode-------------------" << std::endl;
+            rosbag_read::INSStdMsg::ConstPtr ins_msg = ins_view->begin()->instantiate<rosbag_read::INSStdMsg>();
+            std::cout << "ins -> imu" << ins_msg->imu << std::endl;
+            std::cout << "ins -> nav" << ins_msg->nav_sat_fix << std::endl;
+            std::cout << "ins -> header" << ins_msg->header << std::endl;
+        }
     }
-    
 
     std::cout << GREEN << "Load rosbag file success" << RESET << std::endl;
 
@@ -117,8 +123,11 @@ void rosbag_reader2::read_rosbag() {
     std::cout << YELLOW << "total frame num: " << total_frame_num  << RESET << std::endl;
 
     if (save_all){
-//        save_all_img(view, camera_topics.size(), total_frame_num);
-        save_all_img_with_ins(view, camera_topics.size(), total_frame_num, ins_view);
+        if (read_ins_flag) {
+            save_all_img_with_ins(view, camera_topics.size(), total_frame_num, ins_view);
+        } else{
+            save_all_img(view, camera_topics.size(), total_frame_num);
+        }
     } else{
         save_one_group_img(view, camera_topics.size(), total_frame_num);
     }
@@ -190,11 +199,13 @@ void rosbag_reader2::save_all_img(std::vector<rosbag::View *> view, int view_siz
     std::cout.flush();
     std::cout << std::endl;  // Move to the next line after the loop is done
 
-    root = format_file_name_json(img_name_vec, save_root, cam_name);
-    std::ofstream ofs(save_root + "/img_name.json");
-    Json::StyledWriter styledWriter;
-    ofs << styledWriter.write(root);
-    ofs.close();
+    if (save_json_flag) {
+        root = format_file_name_json(img_name_vec, save_root, cam_name);
+        std::ofstream ofs(save_root + "/img_name.json");
+        Json::StyledWriter styledWriter;
+        ofs << styledWriter.write(root);
+        ofs.close();
+    }
 }
 
 void rosbag_reader2::save_one_group_img(std::vector<rosbag::View *> view, int view_size, int total_frame_num) {
@@ -315,12 +326,13 @@ void rosbag_reader2::save_all_img_with_ins(std::vector<rosbag::View *> view, int
     std::cout.flush();
     std::cout << std::endl;  // Move to the next line after the loop is done
 
-    root = format_file_name_with_ins_json(img_name_vec, save_root, cam_name, ins_rotations_vec, ins_nav_vec);
-    std::ofstream ofs(save_root + "/img_name.json");
-    Json::StyledWriter styledWriter;
-    ofs << styledWriter.write(root);
-    ofs.close();
-
+    if (save_json_flag) {
+        root = format_file_name_with_ins_json(img_name_vec, save_root, cam_name, ins_rotations_vec, ins_nav_vec);
+        std::ofstream ofs(save_root + "/img_name.json");
+        Json::StyledWriter styledWriter;
+        ofs << styledWriter.write(root);
+        ofs.close();
+    }
 }
 
 

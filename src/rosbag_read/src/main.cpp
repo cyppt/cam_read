@@ -14,17 +14,17 @@ int main(int argc, char** argv)
     ros::NodeHandle nh;
     rosbag_reader2 reader;
     signal(SIGINT, SigIntHandler);
-    rosbag_format format;
+//    rosbag_format format;
 
     std::cout << CYAN << "start to read rosbag" << RESET << std::endl;
     reader.read_rosbag();
     std::cout << MAGENTA << "read rosbag done" << RESET << std::endl;
 
-    if (reader.fomat_bag_falg()) {
-        std::cout << CYAN << "start to format rosbag" << RESET << std::endl;
-        format.format_rosbag();
-        std::cout << MAGENTA << "format rosbag done" << RESET << std::endl;
-    }
+//    if (reader.fomat_bag_falg()) {
+//        std::cout << CYAN << "start to format rosbag" << RESET << std::endl;
+//        format.format_rosbag();
+//        std::cout << MAGENTA << "format rosbag done" << RESET << std::endl;
+//    }
     return 0;
 }
 
