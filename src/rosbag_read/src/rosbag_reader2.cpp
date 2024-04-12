@@ -17,7 +17,9 @@ rosbag_reader2::rosbag_reader2() {
     save_root = config["save_root"].as<std::string>();
     ins_topic = config["ins_topic"].as<std::string>();
     camera_topics = config["camera_topics"].as<std::vector<std::string>>();
+    lidar_topic = config["lidar_topic"].as<std::string>();
     cam_save_path = config["cam_save_path"].as<std::vector<std::string>>();
+    lidar_save_path = config["lidar_save_path"].as<std::string>();
     std::vector<std::string> cam_name_temp = config["cam_name"].as<std::vector<std::string>>();
     save_all = config["save_all"].as<bool>();
     bag_format = config["bag_format"].as<bool>();
@@ -25,6 +27,7 @@ rosbag_reader2::rosbag_reader2() {
     save_one_index = config["save_one_index"].as<int>();
     debug_mode = config["debug_mode"].as<int>();
     read_ins_flag = config["read_ins_flag"].as<bool>();
+    read_lidar_flag = config["read_lidar_flag"].as<bool>();
     save_json_flag = config["save_json_flag"].as<bool>();
     for (auto &&cam:cam_save_path){
         if (save_all) cam = save_root + cam;
@@ -111,6 +114,27 @@ void rosbag_reader2::read_rosbag() {
         }
     }
 
+    rosbag::View* lidar_view = nullptr;
+    int lidar_frame_num = 0;
+    if (read_lidar_flag){
+        lidar_view = new rosbag::View(bag, rosbag::TopicQuery(lidar_topic));
+        if (debug_mode == DEBUG_LOAD_DATA) {
+            // view lidar data
+            std::cout << YELLOW << "-----------------debug mode-------------------" << std::endl;
+            sensor_msgs::PointCloud2::ConstPtr lidar_msg = lidar_view->begin()->instantiate<sensor_msgs::PointCloud2>();
+            std::cout << "lidar -> header" << lidar_msg->header << std::endl;
+        }
+        lidar_frame_num = lidar_view->size();
+
+        std::string lidar_save = save_root + lidar_save_path;
+        if (access(lidar_save.c_str(), 0) == -1) {
+            std::cout << "lidar path not exist, create it" << std::endl;
+            mkdir(lidar_save.c_str(), 0777);
+        }
+
+        save_pcd(lidar_view, lidar_frame_num);
+    }
+
     std::cout << GREEN << "Load rosbag file success" << RESET << std::endl;
 
     int total_frame_num = view[0]->size();
@@ -141,6 +165,12 @@ void rosbag_reader2::read_rosbag() {
     }
 }
 
+/**
+ * @brief save all images
+ * @param view vector of rosbag::View
+ * @param view_size num of camera topics
+ * @param total_frame_num total frame num
+ */
 void rosbag_reader2::save_all_img(std::vector<rosbag::View *> view, int view_size, int total_frame_num) {
     int total_messages = total_frame_num * view_size;  // Total number of messages
     int current_message = 0;
@@ -208,6 +238,12 @@ void rosbag_reader2::save_all_img(std::vector<rosbag::View *> view, int view_siz
     }
 }
 
+/**
+ * @brief save one group images
+ * @param view vector of rosbag::View
+ * @param view_size num of camera topics
+ * @param total_frame_num total frame num
+ */
 void rosbag_reader2::save_one_group_img(std::vector<rosbag::View *> view, int view_size, int total_frame_num) {
     save_one_index = save_one_index % total_frame_num;
     for (int j = 0; j < view_size; ++j) {
@@ -241,10 +277,22 @@ void rosbag_reader2::save_one_group_img(std::vector<rosbag::View *> view, int vi
     } // end for view_size
 }
 
+/**
+ * @brief return the bag format flag
+ * @return bag_format
+ */
 bool rosbag_reader2::fomat_bag_falg() {
     return bag_format;
 }
 
+
+/**
+ * @brief save all images with ins data
+ * @param view vector of rosbag::View
+ * @param view_size num of camera topics
+ * @param total_frame_num total frame num
+ * @param ins_view rosbag::View of ins data
+ */
 void rosbag_reader2::save_all_img_with_ins(std::vector<rosbag::View *> view, int view_size, int total_frame_num,
                                            rosbag::View *ins_view) {
     int total_messages = total_frame_num * view_size;  // Total number of messages
@@ -333,6 +381,54 @@ void rosbag_reader2::save_all_img_with_ins(std::vector<rosbag::View *> view, int
         ofs << styledWriter.write(root);
         ofs.close();
     }
+}
+
+/**
+ * @brief save pcd file
+ * @param view vector of rosbag::View
+ * @param total_frame_num total frame num
+ */
+void rosbag_reader2::save_pcd(rosbag::View * view, int total_frame_num) {
+    int total_messages = total_frame_num;  // Total number
+    int current_message = 0;
+    int barWidth = 70;
+
+    ros::Time last_time = view->begin()->getTime() - ros::Duration(save_interval);
+
+    for (const rosbag::MessageInstance &msg: *view) {
+        float progress = static_cast<float>(current_message) / total_messages;
+        std::cout << MAGENTA << "[";
+        int pos = barWidth * progress;
+        for (int i = 0; i < barWidth; ++i) {
+            if (i < pos) std::cout << "=";
+            else if (i == pos) std::cout << ">";
+            else std::cout << " ";
+        }
+        std::cout << "] " << int(progress * 100.0) << "%\r" << RESET;
+        std::cout.flush();  // Manually flush the buffer
+
+        ++current_message;
+
+        sensor_msgs::PointCloud2::ConstPtr lidar_msg = msg.instantiate<sensor_msgs::PointCloud2>();
+
+        ros::Time current_time = lidar_msg->header.stamp;
+        if((current_time - last_time).toSec() >= save_interval){
+            last_time = current_time;
+            // save pcd file
+            std::string pcd_name = "lidar_" + std::to_string(current_time.toNSec() / 1000000000) + ".pcd";
+            pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
+            pcl::fromROSMsg(*lidar_msg, *cloud);
+            pcl::io::savePCDFileBinary(save_root + lidar_save_path + pcd_name, *cloud);
+        } // end if
+    } // end for msg
+
+    std::cout << MAGENTA << "[";
+    for (int i = 0; i < barWidth; ++i) {
+        std::cout << "=";
+    }
+    std::cout << "] " << 100 << "%\r" << RESET;
+    std::cout.flush();
+    std::cout << std::endl;  // Move to the next line after the loop is done
 }
 
 

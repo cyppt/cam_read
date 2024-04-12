@@ -16,6 +16,9 @@ save_root: "/media/cyppt/T7_Shield/6cam/lidar_6cam_white_car_6_building_garden_b
 #INS topic name
 ins_topic: "/ULV_ins_std_info"
 
+#Lidar topic name
+lidar_topic: "/velodyne_points"
+
 #camera topic name
 #camera_topics:
 #  - "/camera1/compressed"
@@ -62,6 +65,9 @@ cam_name:
 #  - "camera4"
 #  - "camera5"
 
+#lidar save path
+lidar_save_path: "/lidar/"
+
 # save time interval
 save_interval: 1
 #whether to save all
@@ -74,6 +80,9 @@ save_one_index: 1442
 
 #read ins msg
 read_ins_flag: False
+
+#read lidar msg
+read_lidar_flag: True
 
 #save json flag
 save_json_flag: True

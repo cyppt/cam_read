@@ -14,11 +14,14 @@ find_package(catkin REQUIRED COMPONENTS
         std_msgs
         geometry_msgs
         message_generation
+        pcl_conversions
+        pcl_ros
 )
 find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(jsoncpp REQUIRED)
+find_package(PCL REQUIRED)
 
 
 add_message_files(
