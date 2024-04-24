@@ -37,15 +37,17 @@ public:
 
 private:
 
-    void save_all_img(std::vector<rosbag::View *> view, int view_size, int total_frame_num);
+    std::vector<ros::Time> save_all_img(std::vector<rosbag::View *> view, int view_size, int total_frame_num);
 
     void save_one_group_img(std::vector<rosbag::View *> view, int view_size, int total_frame_num);
 
     void save_new_freq_bag(std::vector<rosbag::View *> view, int view_size, int total_frame_num);
 
-    void save_all_img_with_ins(std::vector<rosbag::View *> view, int view_size, int total_frame_num, rosbag::View *ins_view);
+    std::vector<ros::Time> save_all_img_with_ins(std::vector<rosbag::View *> view, int view_size, int total_frame_num, rosbag::View *ins_view);
 
     void save_pcd(rosbag::View * view, int total_frame_num);
+
+    void save_pcd(rosbag::View * view, int total_frame_num, std::vector<ros::Time> img_time);
 
     std::string bag_path;
     std::string save_root;

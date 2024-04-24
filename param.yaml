@@ -6,12 +6,12 @@
 #bag_path: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib-2023-04-20-16-03-15.bag"
 #bag_path: "/media/cyppt/新加卷/dataset/six_cam/route14_2021-12-29-15-54-06.bag"
 #bag_path: "/media/cyppt/T7_Shield/6cam/route17_2021-12-29-16-49-33.bag"
-bag_path : "/media/cyppt/T7_Shield/6cam/ros_bag/lidar_6cam_white_car_6_building_garden_between_2024-04-12-08-21-21.bag"
+bag_path : "/media/cyppt/T7_Shield/6cam/ros_bag/lidar_6cam_white_car_6_building_park_2024-04-12-08-13-39.bag"
 #save root path
 #save_root: "/media/cyppt/新加卷/dataset/six_cam/old-platform-calib"
 #save_root: "/media/cyppt/新加卷/dataset/six_cam/route14"
 #save_root: "/media/cyppt/T7_Shield/6cam/route17"
-save_root: "/media/cyppt/T7_Shield/6cam/lidar_6cam_white_car_6_building_garden_between"
+save_root: "/media/cyppt/T7_Shield/6cam/lidar_6cam_white_car_6_building_park"
 
 #INS topic name
 ins_topic: "/ULV_ins_std_info"
