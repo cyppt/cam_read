@@ -291,7 +291,7 @@ void rosbag_reader2::save_one_group_img(std::vector<rosbag::View *> view, int vi
  * @brief return the bag format flag
  * @return bag_format
  */
-bool rosbag_reader2::fomat_bag_falg() {
+bool rosbag_reader2::fomat_bag_flag() {
     return bag_format;
 }
 

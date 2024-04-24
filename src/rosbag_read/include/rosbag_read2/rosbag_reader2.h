@@ -33,7 +33,7 @@ public:
 
     void read_rosbag();
 
-    bool fomat_bag_falg();
+    bool fomat_bag_flag();
 
 private:
 

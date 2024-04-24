@@ -20,7 +20,7 @@ int main(int argc, char** argv)
     reader.read_rosbag();
     std::cout << MAGENTA << "read rosbag done" << RESET << std::endl;
 
-//    if (reader.fomat_bag_falg()) {
+//    if (reader.fomat_bag_flag()) {
 //        std::cout << CYAN << "start to format rosbag" << RESET << std::endl;
 //        format.format_rosbag();
 //        std::cout << MAGENTA << "format rosbag done" << RESET << std::endl;
