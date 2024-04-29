@@ -453,6 +453,7 @@ void rosbag_reader2::save_pcd(rosbag::View *view, int total_frame_num, std::vect
     int current_message = 0;
     int barWidth = 70;
     int img_index = 0;
+    int img_size = img_time.size();
 
     std::cout << "total lidar frame num: " << total_frame_num << std::endl;
     std::cout << "total img frame num: " << img_time.size() << std::endl;
@@ -461,7 +462,7 @@ void rosbag_reader2::save_pcd(rosbag::View *view, int total_frame_num, std::vect
     sensor_msgs::PointCloud2::ConstPtr last_lidar_msg = view->begin()->instantiate<sensor_msgs::PointCloud2>();
 
     for (const rosbag::MessageInstance &msg: *view) {
-        float progress = static_cast<float>(current_message) / total_messages;
+        float progress = static_cast<float>(img_index) / img_size;
         std::cout << MAGENTA << "[";
         int pos = barWidth * progress;
         for (int i = 0; i < barWidth; ++i) {
@@ -491,6 +492,10 @@ void rosbag_reader2::save_pcd(rosbag::View *view, int total_frame_num, std::vect
             pcl::io::savePCDFileBinary(save_root + lidar_save_path + pcd_name, *cloud);
             last_time_diff = 0x3f3f;
             img_index++;
+//            printf("%d\n", img_index);
+//            printf("time diff: %f\n", last_lidar_msg->header.stamp.toSec() - img_time_current.toSec());
+//            printf("file name: %s\n", pcd_name.c_str());
+            if (img_index >= img_size - 1) break;
         } // end if
 
     } // end for msg
